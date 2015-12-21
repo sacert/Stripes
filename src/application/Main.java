@@ -1,23 +1,25 @@
 package application;
 
-import java.awt.event.KeyEvent;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 	
-	boolean horizontalMode = true;
-	int rowCol = 0;
+	public static boolean horizontalMode = true;
+	public static int rowCol = 0;
 	
 	@Override
 	public void start(Stage primaryStage) {
+		
 		try {
 			Parent root = (Parent) FXMLLoader.load(getClass().getResource("/application/GUI.fxml"));
 
@@ -38,6 +40,7 @@ public class Main extends Application {
 					
 					if(event.getCode() == KeyCode.SPACE) {
 						horizontalMode = !horizontalMode;
+						rowCol = 1;
 					}
 					
 					if(horizontalMode) {
@@ -84,7 +87,6 @@ public class Main extends Application {
 				}
 				
 			});
-
 			
 			// close application on termination
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

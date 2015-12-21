@@ -32,6 +32,7 @@ public class FXController implements Initializable{
 	@FXML private GridPane stripesGrid;
 	@FXML private Button r1,r2,r3,r4,l1,l2,l3,l4,u1,u2,u3,u4,d1,d2,d3,d4;
 	@FXML private Pane MainWindow;
+	@FXML private GridPane gridOverlay;
 	
 	static String[][] board = new String[4][4];
 	
@@ -56,19 +57,14 @@ public class FXController implements Initializable{
 			        ae -> printBoard(board)));
 			timeline.setCycleCount(Animation.INDEFINITE);
 			timeline.play();
+		
+		 Timeline timelineOverlay = new Timeline(new KeyFrame(
+			        Duration.millis(100),
+			        ae -> printOverlay(board, Main.rowCol)));
+		 timelineOverlay.setCycleCount(Animation.INDEFINITE);
+		 timelineOverlay.play();
 		 
-	}
-	
-	public static String[][] getBoard() {
-		return board;
-	}
-	
-	public static void getValue(int counter) {
-		if(counter == 1) {
-			moveRight(1, board);
-		}
-	}
-	
+	}	
 	
 	private int colourChecker(String RGBY) {
 		
@@ -96,6 +92,43 @@ public class FXController implements Initializable{
 		 else if (RGBY == "Y")
 		 	 yellowCount++;
 	}
+	
+	void printOverlay(String board[][], int rowcol) {
+
+		gridOverlay.getChildren().clear();
+		 for (int i = 0; i < 4; i++) {
+		 	 for (int j = 0; j < 4; j++) {
+		 		StackPane square = new StackPane();
+		 		if(Main.horizontalMode) {
+			 		if(i == rowcol) {
+			 			square.getStyleClass().add("selected");
+			 			square.setStyle("-fx-background-color: " + getColor(board[i][j]) + ";");
+			 			//square.setStyle("-fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-border-radius:3 3 3 3; -fx-padding: 5; -fx-border-style: solid;");
+//				 		if(j == 0) 
+//				 			square.setStyle("-fx-border-width: 2 0 2 2; -fx-border-color: white; -fx-border-radius:3 0 0 3; -fx-padding: 5; -fx-border-style: solid;");
+//				 		else if(j == 1 || j == 2) 
+//				 			square.setStyle("-fx-border-width: 2 0 2 0; -fx-border-color: white;-fx-border-style: solid;");
+//				 		else if(j == 3) 
+//				 			square.setStyle("-fx-border-width: 2 2 2 0; -fx-border-color: white; -fx-border-radius:0 3 3 0; -fx-padding: 5;-fx-border-style: solid;");
+						gridOverlay.add(square, j, i);
+			 		}
+		 		}
+		 		else {
+		 			if(j == rowcol) {
+		 				square.getStyleClass().add("selected");
+		 				square.setStyle("-fx-background-color: " + getColor(board[i][j]) + ";");
+//				 		if(i == 0) 
+//				 			square.setStyle("-fx-border-width: 2 2 0 2; -fx-border-color: white; -fx-border-radius:3 0 0 3; -fx-padding: 5;-fx-border-style: solid;");
+//				 		else if(i == 1 || i == 2) 
+//				 			square.setStyle("-fx-border-width: 0 2 0 2; -fx-border-color: white;-fx-border-style: solid;");
+//				 		else if(i == 3) 
+//				 			square.setStyle("-fx-border-width: 0 2 2 2; -fx-border-color: white; -fx-border-radius:0 3 3 0; -fx-padding: 5;-fx-border-style: solid;");
+						gridOverlay.add(square, j, i);
+			 		}
+		 		}
+		 	 }
+		 }
+	}
 	 
 	void printBoard(String board[][]) {
 
@@ -103,6 +136,8 @@ public class FXController implements Initializable{
 		 for (int i = 0; i < 4; i++) {
 		 	 for (int j = 0; j < 4; j++) {
 		 		StackPane square = new StackPane();
+		 		
+		 		
 		 		
 		 		square.getStyleClass().add("panel");
 				square.setStyle("-fx-background-color: " + getColor(board[i][j]) + ";");
