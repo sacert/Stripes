@@ -2,14 +2,22 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 public class FXController implements Initializable{
 	
@@ -20,14 +28,16 @@ public class FXController implements Initializable{
 	
 	static String userInput;
 	
+	@FXML Parent root;
 	@FXML private GridPane stripesGrid;
 	@FXML private Button r1,r2,r3,r4,l1,l2,l3,l4,u1,u2,u3,u4,d1,d2,d3,d4;
+	@FXML private Pane MainWindow;
+	
+	static String[][] board = new String[4][4];
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
 		// create the array for the board
-		 String[][] board = new String[4][4];
 		 String[] colours = { "R", "G", "B", "Y" };
 		 String RGBY = null;
 		 
@@ -40,115 +50,25 @@ public class FXController implements Initializable{
 		 	 	 colourIncrement(RGBY);
 		 	 }
 		 }
-		 StripesKeyBoardEvent(board);
-
-		 printBoard(board);
+		 
+		 Timeline timeline = new Timeline(new KeyFrame(
+			        Duration.millis(100),
+			        ae -> printBoard(board)));
+			timeline.setCycleCount(Animation.INDEFINITE);
+			timeline.play();
 		 
 	}
 	
-	private void StripesKeyBoardEvent(String board[][]) {
-		
-		r1.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveRight(0, board);
-				printBoard(board);
-			}
-		});
-		r2.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveRight(1, board);
-				printBoard(board);
-			}
-		});
-		r3.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveRight(2, board);
-				printBoard(board);
-			}
-		});
-		r4.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveRight(3, board);
-				printBoard(board);
-			}
-		});
-		l1.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveLeft(0, board);
-				printBoard(board);
-			}
-		});
-		l2.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveLeft(1, board);
-				printBoard(board);
-			}
-		});
-		l3.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveLeft(2, board);
-				printBoard(board);
-			}
-		});
-		l4.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveLeft(3, board);
-				printBoard(board);
-			}
-		});
-		
-		u1.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveUp(0, board);
-				printBoard(board);
-			}
-		});
-		u2.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveUp(1, board);
-				printBoard(board);
-			}
-		});
-		u3.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveUp(2, board);
-				printBoard(board);
-			}
-		});
-		u4.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveUp(3, board);
-				printBoard(board);
-			}
-		});
-		d1.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveDown(0, board);
-				printBoard(board);
-			}
-		});
-		d2.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveDown(1, board);
-				printBoard(board);
-			}
-		});
-		d3.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveDown(2, board);
-				printBoard(board);
-			}
-		});
-		d4.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				moveDown(3, board);
-				printBoard(board);
-			}
-		});
-		
-		
-			
+	public static String[][] getBoard() {
+		return board;
 	}
+	
+	public static void getValue(int counter) {
+		if(counter == 1) {
+			moveRight(1, board);
+		}
+	}
+	
 	
 	private int colourChecker(String RGBY) {
 		
@@ -178,6 +98,7 @@ public class FXController implements Initializable{
 	}
 	 
 	void printBoard(String board[][]) {
+
 		stripesGrid.getChildren().clear();
 		 for (int i = 0; i < 4; i++) {
 		 	 for (int j = 0; j < 4; j++) {
@@ -207,7 +128,7 @@ public class FXController implements Initializable{
 	 return RGBY;
 	}
 	 
-	void moveRight(int row, String board[][]) {
+	static void moveRight(int row, String board[][]) {
 	 
 	 String temp_1;
 	 String temp_2;
@@ -226,7 +147,7 @@ public class FXController implements Initializable{
 	 
 	}
 	 
-	void moveLeft(int row, String board[][]) {
+	static void moveLeft(int row, String board[][]) {
 	 
 	 String temp_1;
 	 String temp_2;
@@ -245,7 +166,7 @@ public class FXController implements Initializable{
 	 
 	}
 	 
-	void moveUp(int col, String board[][]) {
+	static void moveUp(int col, String board[][]) {
 	 
 	 String temp_1;
 	 String temp_2;
@@ -264,7 +185,7 @@ public class FXController implements Initializable{
 	 
 	}
 	 
-	void moveDown(int col, String board[][]) {
+	static void moveDown(int col, String board[][]) {
 	 
 	 String temp_1;
 	 String temp_2;
